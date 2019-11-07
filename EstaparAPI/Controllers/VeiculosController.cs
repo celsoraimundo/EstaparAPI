@@ -5,105 +5,106 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EstaparAPI.Models;
+using Estapar.Domain.Entities;
+using Estapar.Infra.Data.Context;
+using Estapar.Service.Services;
+using Estapar.Service.Validators;
 
-namespace EstaparAPI.Controllers
+namespace Estapar.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
+
     [ApiController]
+    [Route("api/Veiculos")]
     public class VeiculosController : ControllerBase
     {
-        private readonly essenceestaparContext _context;
+        private BaseService<Veiculo> service = new BaseService<Veiculo>();
 
-        public VeiculosController(essenceestaparContext context)
+        [HttpPost]
+        public IActionResult Post([FromBody] Veiculo item)
         {
-            _context = context;
-        }
-
-        // GET: api/Veiculoes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Veiculo>>> GetVeiculo()
-        {
-            return await _context.Veiculo.ToListAsync();
-        }
-
-        // GET: api/Veiculoes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Veiculo>> GetVeiculo(int id)
-        {
-            var veiculo = await _context.Veiculo.FindAsync(id);
-
-            if (veiculo == null)
-            {
-                return NotFound();
-            }
-
-            return veiculo;
-        }
-
-        // PUT: api/Veiculoes/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutVeiculo(int id, Veiculo veiculo)
-        {
-            if (id != veiculo.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(veiculo).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                service.Post<VeiculoValidator>(item);
+
+                return new ObjectResult(item.Id);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArgumentNullException ex)
             {
-                if (!VeiculoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(ex);
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // POST: api/Veiculoes
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Veiculo>> PostVeiculo(Veiculo veiculo)
+        [HttpPut]
+        public IActionResult Put([FromBody] Veiculo item)
         {
-            _context.Veiculo.Add(veiculo);
-            await _context.SaveChangesAsync();
+            try
+            {
+                service.Put<VeiculoValidator>(item);
 
-            return CreatedAtAction("GetVeiculo", new { id = veiculo.Id }, veiculo);
+                return new ObjectResult(item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // DELETE: api/Veiculoes/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Veiculo>> DeleteVeiculo(int id)
+        public IActionResult Delete(int id)
         {
-            var veiculo = await _context.Veiculo.FindAsync(id);
-            if (veiculo == null)
+            try
             {
-                return NotFound();
+                service.Delete(id);
+
+                return new NoContentResult();
             }
-
-            _context.Veiculo.Remove(veiculo);
-            await _context.SaveChangesAsync();
-
-            return veiculo;
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        
+        [HttpGet]
+        public IActionResult Get()
+        {
+            try
+            {
+                return new ObjectResult(service.Get());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        private bool VeiculoExists(int id)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            return _context.Veiculo.Any(e => e.Id == id);
+            try
+            {
+                return new ObjectResult(service.Get(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

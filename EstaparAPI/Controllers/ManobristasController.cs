@@ -5,105 +5,105 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EstaparAPI.Models;
+using Estapar.Domain.Entities;
+using Estapar.Infra.Data.Context;
+using Estapar.Service.Services;
+using Estapar.Service.Validators;
 
-namespace EstaparAPI.Controllers
+namespace Estapar.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
+    [Route("api/Manobristas")]
     public class ManobristasController : ControllerBase
     {
-        private readonly essenceestaparContext _context;
+        private BaseService<Manobrista> service = new BaseService<Manobrista>();
 
-        public ManobristasController(essenceestaparContext context)
+        [HttpPost]
+        public IActionResult Post([FromBody] Manobrista item)
         {
-            _context = context;
-        }
-
-        // GET: api/Manobristas
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Manobrista>>> GetManobrista()
-        {
-            return await _context.Manobrista.ToListAsync();
-        }
-
-        // GET: api/Manobristas/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Manobrista>> GetManobrista(int id)
-        {
-            var manobrista = await _context.Manobrista.FindAsync(id);
-
-            if (manobrista == null)
-            {
-                return NotFound();
-            }
-
-            return manobrista;
-        }
-
-        // PUT: api/Manobristas/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutManobrista(int id, Manobrista manobrista)
-        {
-            if (id != manobrista.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(manobrista).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                service.Post<ManobristaValidator>(item);
+
+                return new ObjectResult(item.Id);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArgumentNullException ex)
             {
-                if (!ManobristaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(ex);
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // POST: api/Manobristas
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<Manobrista>> PostManobrista(Manobrista manobrista)
+        [HttpPut]
+        public IActionResult Put([FromBody] Manobrista item)
         {
-            _context.Manobrista.Add(manobrista);
-            await _context.SaveChangesAsync();
+            try
+            {
+                service.Put<ManobristaValidator>(item);
 
-            return CreatedAtAction("GetManobrista", new { id = manobrista.Id }, manobrista);
+                return new ObjectResult(item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // DELETE: api/Manobristas/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Manobrista>> DeleteManobrista(int id)
+        public IActionResult Delete(int id)
         {
-            var manobrista = await _context.Manobrista.FindAsync(id);
-            if (manobrista == null)
+            try
             {
-                return NotFound();
+                service.Delete(id);
+
+                return new NoContentResult();
             }
-
-            _context.Manobrista.Remove(manobrista);
-            await _context.SaveChangesAsync();
-
-            return manobrista;
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        private bool ManobristaExists(int id)
+        [HttpGet]
+        public IActionResult Get()
         {
-            return _context.Manobrista.Any(e => e.Id == id);
+            try
+            {
+                return new ObjectResult(service.Get());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return new ObjectResult(service.Get(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

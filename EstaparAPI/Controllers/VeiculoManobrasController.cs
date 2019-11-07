@@ -5,105 +5,105 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EstaparAPI.Models;
+using Estapar.Domain.Entities;
+using Estapar.Infra.Data.Context;
+using Estapar.Service.Services;
+using Estapar.Service.Validators;
 
-namespace EstaparAPI.Controllers
+namespace Estapar.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
+    [Route("api/VeiculosManobras")]
     public class VeiculoManobrasController : ControllerBase
     {
-        private readonly essenceestaparContext _context;
+        private BaseService<VeiculoManobra> service = new BaseService<VeiculoManobra>();
 
-        public VeiculoManobrasController(essenceestaparContext context)
+        [HttpPost]
+        public IActionResult Post([FromBody] VeiculoManobra item)
         {
-            _context = context;
-        }
-
-        // GET: api/VeiculoManobras
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<VeiculoManobra>>> GetVeiculoManobra()
-        {
-            return await _context.VeiculoManobra.ToListAsync();
-        }
-
-        // GET: api/VeiculoManobras/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<VeiculoManobra>> GetVeiculoManobra(int id)
-        {
-            var veiculoManobra = await _context.VeiculoManobra.FindAsync(id);
-
-            if (veiculoManobra == null)
-            {
-                return NotFound();
-            }
-
-            return veiculoManobra;
-        }
-
-        // PUT: api/VeiculoManobras/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutVeiculoManobra(int id, VeiculoManobra veiculoManobra)
-        {
-            if (id != veiculoManobra.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(veiculoManobra).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                service.Post<VeiculoManobraValidator>(item);
+
+                return new ObjectResult(item.Id);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ArgumentNullException ex)
             {
-                if (!VeiculoManobraExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound(ex);
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // POST: api/VeiculoManobras
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<VeiculoManobra>> PostVeiculoManobra(VeiculoManobra veiculoManobra)
+        [HttpPut]
+        public IActionResult Put([FromBody] VeiculoManobra item)
         {
-            _context.VeiculoManobra.Add(veiculoManobra);
-            await _context.SaveChangesAsync();
+            try
+            {
+                service.Put<VeiculoManobraValidator>(item);
 
-            return CreatedAtAction("GetVeiculoManobra", new { id = veiculoManobra.Id }, veiculoManobra);
+                return new ObjectResult(item);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // DELETE: api/VeiculoManobras/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<VeiculoManobra>> DeleteVeiculoManobra(int id)
+        public IActionResult Delete(int id)
         {
-            var veiculoManobra = await _context.VeiculoManobra.FindAsync(id);
-            if (veiculoManobra == null)
+            try
             {
-                return NotFound();
+                service.Delete(id);
+
+                return new NoContentResult();
             }
-
-            _context.VeiculoManobra.Remove(veiculoManobra);
-            await _context.SaveChangesAsync();
-
-            return veiculoManobra;
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        private bool VeiculoManobraExists(int id)
+        [HttpGet]
+        public IActionResult Get()
         {
-            return _context.VeiculoManobra.Any(e => e.Id == id);
+            try
+            {
+                return new ObjectResult(service.Get());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            try
+            {
+                return new ObjectResult(service.Get(id));
+            }
+            catch (ArgumentException ex)
+            {
+                return NotFound(ex);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

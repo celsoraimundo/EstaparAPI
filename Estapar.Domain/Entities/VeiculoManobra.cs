@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EstaparAPI.Models
+namespace Estapar.Domain.Entities
 {
-    public partial class VeiculoManobra
+    public class VeiculoManobra : BaseEntity
     {
-        public int Id { get; set; }
         public int IdVeiculo { get; set; }
         public int IdManobrista { get; set; }
         public DateTime DataHoraManobra { get; set; }

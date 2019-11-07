@@ -17,4 +17,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0-rc4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Estapar.Domain\Estapar.Domain.csproj" />
+    <ProjectReference Include="..\Estapar.Infra.Data\Estapar.Infra.Data.csproj" />
+    <ProjectReference Include="..\Estapar.Service\Estapar.Service.csproj" />
+  </ItemGroup>
+
 </Project>

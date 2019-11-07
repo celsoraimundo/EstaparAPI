@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Estapar.Domain\Estapar.Domain.csproj" />
+    <ProjectReference Include="..\Estapar.Infra.Data\Estapar.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>

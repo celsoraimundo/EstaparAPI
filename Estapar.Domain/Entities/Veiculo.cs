@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EstaparAPI.Models
+namespace Estapar.Domain.Entities
 {
-    public partial class Veiculo
+    public class Veiculo : BaseEntity
     {
         public Veiculo()
         {
             VeiculoManobra = new HashSet<VeiculoManobra>();
         }
 
-        public int Id { get; set; }
         public string Marca { get; set; }
         public string Modelo { get; set; }
         public string Placa { get; set; }
