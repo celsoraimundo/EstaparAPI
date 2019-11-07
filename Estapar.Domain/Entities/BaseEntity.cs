@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Estapar.Domain.Entities
+﻿namespace Estapar.Domain.Entities
 {
     public abstract class BaseEntity
     {

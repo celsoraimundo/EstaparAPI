@@ -1,9 +1,6 @@
 ﻿using Estapar.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Estapar.Infra.Data.Mapping
 {
@@ -31,8 +28,6 @@ namespace Estapar.Infra.Data.Mapping
                     .IsRequired()
                     .HasMaxLength(7)
                     .IsUnicode(false);
-
         }
     }
 }
-

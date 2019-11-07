@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Estapar.Domain.Entities
 {
-    public  class Manobrista : BaseEntity
+    public class Manobrista : BaseEntity
     {
         public Manobrista()
         {

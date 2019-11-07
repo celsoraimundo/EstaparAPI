@@ -1,8 +1,6 @@
-﻿using FluentValidation;
-using Estapar.Domain.Entities;
-using System;
+﻿using Estapar.Domain.Entities;
+using FluentValidation;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Estapar.Domain.Interfaces
 {

@@ -1,8 +1,5 @@
-﻿using System;
-using Estapar.Domain.Entities;
+﻿using Estapar.Domain.Entities;
 using Estapar.Infra.Data.Mapping;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

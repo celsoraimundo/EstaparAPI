@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Estapar.Domain.Entities;
-using Estapar.Infra.Data.Context;
+﻿using Estapar.Domain.Entities;
 using Estapar.Service.Services;
 using Estapar.Service.Validators;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Estapar.Api.Controllers
 {
     [Produces("application/json")]
-
     [ApiController]
     [Route("api/Veiculos")]
     public class VeiculosController : ControllerBase
@@ -76,7 +69,7 @@ namespace Estapar.Api.Controllers
                 return BadRequest(ex);
             }
         }
-        
+
         [HttpGet]
         public IActionResult Get()
         {
