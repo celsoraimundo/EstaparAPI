@@ -31,4 +31,3 @@ namespace Estapar.Infra.Data.Mapping
         }
     }
 }
-

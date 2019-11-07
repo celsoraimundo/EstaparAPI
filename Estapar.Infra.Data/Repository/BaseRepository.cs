@@ -1,6 +1,5 @@
 ﻿using Estapar.Domain.Entities;
 using Estapar.Domain.Interfaces;
-using Estapar.Domain.Interfaces;
 using Estapar.Infra.Data.Context;
 using System;
 using System.Collections.Generic;
