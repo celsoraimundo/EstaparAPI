@@ -8,7 +8,12 @@ namespace Estapar.Infra.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private essenceestaparContext context = new essenceestaparContext();
+        private essenceestaparContext context;
+
+        public BaseRepository(essenceestaparContext context)
+        {
+            this.context = context;
+        }
 
         public void Insert(T obj)
         {

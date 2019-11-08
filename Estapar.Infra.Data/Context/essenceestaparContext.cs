@@ -7,28 +7,20 @@ namespace Estapar.Infra.Data.Context
 {
     public partial class essenceestaparContext : DbContext
     {
+        private readonly string connectionString;
         public essenceestaparContext()
         {
         }
-
-        public IConfiguration Configuration { get; }
-
+        
         public essenceestaparContext(DbContextOptions<essenceestaparContext> options)
             : base(options)
         {
+           
         }
 
         public DbSet<Manobrista> Manobrista { get; set; }
         public DbSet<Veiculo> Veiculo { get; set; }
         public DbSet<VeiculoManobra> VeiculoManobra { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=NOTE-DELL;Database=essence-estapar;Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +30,7 @@ namespace Estapar.Infra.Data.Context
 
             modelBuilder.Entity<VeiculoManobra>(new VeiculoManobraMap().Configure);
 
-            OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

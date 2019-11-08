@@ -11,7 +11,12 @@ namespace Estapar.Api.Controllers
     [Route("api/Manobristas")]
     public class ManobristasController : ControllerBase
     {
-        private BaseService<Manobrista> service = new BaseService<Manobrista>();
+        private BaseService<Manobrista> service;
+
+        public ManobristasController(BaseService<Manobrista> svc)
+        {
+            service = svc;
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] Manobrista item)
